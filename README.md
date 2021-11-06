@@ -52,3 +52,56 @@ MyBatis는 개발자가 지정한 SQL, 저장프로시저 그리고 몇가지 �
 
 ---
 
+<br>
+
+### 3. 필터(Filter)와 인터셉터(Interceptor)
+- **필터**는 J2EE표준 스펙 기능으로 디스패처 서블릿(Dispatcher Servlet)에 요청이 전달되기 전/후에 url 패턴에 맞는 모든 요청에 대해 부가작업을 처리할 수 있는 기능을 제공<br>
+  1) init 메소드
+  2) doFilter 메소드
+  3) destroy 메소드
+
+![filter_img](https://user-images.githubusercontent.com/64416833/140613695-305ea782-ba45-4ff4-a991-84eb6330030c.jpg)
+
+<br>
+
+- **인터셉터**는 J2EE 표준 스펙인 필터(Filter)와 달리 Spring이 제공하는 기술로써, 디스패처 서블릿(Dispatcher Servlet)이 컨트롤러를 호출하기 전과 후에 요청과 응답을 참조하거나 가공할 수 있는 기능을 제공<br>
+  1) preHandle 메소드<br>
+  2) postHandle 메소드<br>
+  3) afterCompletion 메소드
+
+  
+![intercptor_img](https://user-images.githubusercontent.com/64416833/140613725-5ca836b3-492d-4e0b-b8eb-c4695d62ce97.jpg)
+
+1. 호출 시점
+Filter는 DispatcherServlet이 실행되기 전 , Interceptor는 DispatcherServlet이 실행된 후
+
+2. 설정 위치
+Filter는 web.xml , Interceptor는 spring-servlet.xml
+
+3. 구현 방식
+Filter는 web.xml에서 설정을 하면 구현이 가능하지만, Interceptor는 설정은 물론 메서드 구현이 필요합니다.
+
+[참고자료1] https://victorydntmd.tistory.com/176 <br>
+[참고자료2] https://mangkyu.tistory.com/173
+<br><br>
+
+---
+
+<br>
+
+### 4. WAS와 Web Server의 차이
+[참고자료1] https://helloworld-88.tistory.com/71<br>
+[참고자료2] https://gmlwjd9405.github.io/2018/10/27/webserver-vs-was.html
+<br><br>
+
+---
+
+<br>
+
+### 5. Spring Controller 메소드 리턴타입 - @RequestMapping
+1. ModelAndView
+2. String
+3. void
+4. Object
+5. @ResponseBody
+
