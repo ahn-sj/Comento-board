@@ -90,18 +90,147 @@ Filter는 web.xml에서 설정을 하면 구현이 가능하지만, Interceptor�
 <br>
 
 ### 4. WAS와 Web Server의 차이
+#### **웹 서버(Web Server)**
+- 웹 브라우저 클라이언트로부터 HTTP 요청을 받아 정적인 컨텐츠(.html .jpeg .css 등)를 제공하는 컴퓨터 프로그램
+- HTTP 프로토콜을 기반으로 하여 클라이언트(웹 브라우저 또는 웹 크롤러)의 요청을 서비스 하는 기능을 담당
+- 요청에 따라 아래의 두 가지 기능 중 적절하게 선택하여 수행
+  1) 기능 1 <br>
+      - 정적인 컨텐츠 제공<br>
+      - WAS를 거치지 않고 바로 자원을 제공한다.<br>
+  2) 기능 2<br>
+      - 동적인 컨텐츠 제공을 위한 요청 전달<br>
+      - 클라이언트의 요청(Request)을 WAS에 보내고, WAS가 처리한 결과를 클라이언트에게 전달(응답, Response)한다. <br>
+    (클라이언트는 일반적으로 웹 브라우저를 의미한다.)<br>
+- Web Server의 예<br>
+      Ex) Apache Server, Nginx, IIS(Windows 전용 Web 서버) 등<br><br>
+
+#### **WAS(Web Application Server)**
+- DB조회나 다양한 로직 처리를 요구하는 동적인 컨텐츠를 요청받아 처리하는 것으로 주로 데이터베이스 서버와 같이 수행된다
+- 웹 서버 + 웹 컨테이너로 웹 상에서 사용하는 컴포넌트를 올려놓고 사용하게 되는 서버
+(웹 컨테이너 혹은 서블릿 컨테이너란, JSP와 Servlet을 실행시킬 수 있는 소프트웨어로 WAS는 JSP, Servlet구동 환경을 제공한다.)
+- 여러개의 트랙잭션(논리적인 작업 단위) 관리 기능 및 업무를 처리하는 비즈니스 로직 수행
+- WAS의 예<br>
+      Ex) Tomcat, JBOSS, Jeus, Web Sphere, PowerTier 등 <br>
+
+![web_was](https://user-images.githubusercontent.com/64416833/140641688-90562cac-1db6-4e9e-859d-22925e437a42.jpg)
+<br><br>
+
+**Web서버와 WAS의 차이점<br>**
+  웹서버의 경우 정적인 컨텐츠(HTML, CSS, IMAGE 등)을 요청받아 처리하는 반면, WAS의 경우 동적인 컨텐츠(JSP, ASP, PHP 등)을 요청받아 처리한다
+<br><br>
+
+**Web Server와 WAS가 필요한 이유**
+- Web Server의 경우 클라이언트(웹 브라우저)에 이미지 파일(정적 컨텐츠)을 보내는 과정을 생각해보자.
+이미지 파일과 같은 정적인 파일들은 웹 문서(HTML 문서)가 클라이언트로 보내질 때 함께 가는 것이 아니다. 클라이언트는 HTML 문서를 먼저 받고 그에 맞게 필요한 이미지 파일들을 다시 서버로 요청하면 그때서야 이미지 파일을 받아온다. Web Server를 통해 정적인 파일들을 Application Server까지 가지 않고 앞단에서 빠르게 보내줄 수 있다. 따라서 Web Server에서는 정적 컨텐츠만 처리하도록 기능을 분배하여 서버의 부담을 줄일 수 있다.
+- WAS의 경우 웹 페이지는 정적 컨텐츠와 동적 컨텐츠가 모두 존재한다. 사용자의 요청에 맞게 적절한 동적 컨텐츠를 만들어서 제공해야 한다. 이때, Web Server만을 이용한다면 사용자가 원하는 요청에 대한 결과값을 모두 미리 만들어 놓고 서비스를 해야 한다. 하지만 이렇게 수행하기에는 자원이 절대적으로 부족하다. 따라서 WAS를 통해 요청에 맞는 데이터를 DB에서 가져와서 비즈니스 로직에 맞게 그때 그때 결과를 만들어서 제공함으로써 자원을 효율적으로 사용할 수 있다.
+<br><br>  
+
+
+
+**Web서버와 WAS를 나눠야 하는 이유<br>**
+사실 WAS는 웹 서버와 + 웹 컨테이너의 개념이라 웹 서버가 없더라도 웹 서버의 역할을 동시에 수행할 수 있다.<br>
+그럼에도 나누어 사용하는 이유는 다음과 같다
+  1) 데이터 처리 방식<br>
+    웹서버는 정적인 컨텐츠를 처리하고 WAS는 동적인 처리를 하는데 만약 부하가 적은 웹 서비스라면 두 가지의 요청을 하나의 WAS에서 처리하면 되지만, 부하가 많은 웹 서비스라면 굳이 빠른 시간에 처리할 수 있는 정적인 컨텐츠를 WAS에서 처리하여 부하를 줄 필요가 없다.
+  2) 보안<br>
+    WAS의 동작과정을 보면 사용자에게 요청은 웹 서버가 받고 그 요청을 웹 서버가 WAS에게 전달하는데 이 과정에서 WAS는 DB서버에 대한 접속 정보가 있기 때문에 외부로 노출될 경우 보안상 문제가 될 수 있다. 그래서 웹 서버를 외부망에 외치하고 WAS는 내부망에 위치시켜 보안을 유지한다.
+즉, 자원 이용의 효율성 및 장애 극복, 배포 및 유지보수의 편의성의 이유로 Web Server와 WAS를 분리한다.
+
 [참고자료1] https://helloworld-88.tistory.com/71<br>
-[참고자료2] https://gmlwjd9405.github.io/2018/10/27/webserver-vs-was.html
+[참고자료2] https://gmlwjd9405.github.io/2018/10/27/webserver-vs-was.html<br>
+[참고자료3] https://goldsony.tistory.com/37<br>
 <br><br>
 
 ---
 
 <br>
 
-### 5. Spring Controller 메소드 리턴타입 - @RequestMapping
-1. ModelAndView
-2. String
-3. void
-4. Object
-5. @ResponseBody
+### 5. Spring @Controller의 리턴타입
+MVC에서 Controller는 기본적으로 Model에 대한 처리(DB로부터 데이터 수집)와 이후 이동할 페이지 정보(View정보)를 return하는 역할을 한다<br>
+![mvc_role](https://user-images.githubusercontent.com/64416833/140643379-911864d1-0bf2-4f52-9b58-78bb317cf80b.jpg)
 
+**리턴타입의 종류**
+1. String
+2. void<br>
+**-- 추후 추가예정 --**
+3. ModelAndView
+4. Model
+5. Object
+6. @ResponseBody
+7. @RestController
+8. VO, DTO
+
+### **1. String**
+- String의 경우 리턴 값이 View의 이름으로 사용된다.
+- 분기를 원하는 경우에 자주 사용된다. 예를 들면 요청한 URL이 일치하면 요청한 페이지의 jsp를 호출하여 해당 페이지로 이동하고 일치하지 않으면 다른 페이지의 jsp를 호출하여 그 페이지로 이동하고 싶은 경우에 사용<br>
+즉, 상황에 따라 다른 jsp를 호출할 필요가 있는 경우에 사용된다
+- 반환 타입이 String인 경우에 반환 문자열이 jsp의 이름이 된다.<br>
+    Ex) http://localhost:8080/hello 를 REQUEST한 경우, hello.jsp가 View가 된다.
+- String타입에는 **리다리렉트**와 **포워드** 방식을 지정할 수 있다
+```
+@Controller 
+public class HelloController { 
+  @RequestMapping("/hello") 
+  public String hello() { 
+    return "hello"; 
+  } 
+}
+```
+<br>
+
+### **2. void**
+- Spring이 해당 url을 보고 뷰 네임을 자동으로 결정하는 기능을 제공
+- 스프링 설정 파일에  RequestToViewNameResolver를 통해 자동생성되는 View 이름이 사용된다.
+- 호출하는 URL과 동일한 이름의 jsp를 호출
+```
+@Controller 
+public class HelloController { 
+  @RequestMapping("/hello") 
+  public void hello() { 
+  } 
+}
+```
+
+[참고자료] https://sambalim.tistory.com/69 <br><br>
+
+---
+<br>
+
+### 6. @Component와 @Service, @Controller, @Repository
+@Service, @Controller, @Repository는 @Component를 구체화한 형태로 네 가지 어노테이션 모두 스프링 컨테이너에 등록하는 어노테이션이다<br>
+
+  구체화된 세 어노테이션을 아래와 같이 간단히 말할 수 있다<br>
+    - @Controller :  Presentation Layer에서 Contoller를 명시하기 위해서 사용<br>
+    - @Service :  Business Layer에서 Service를 명시하기 위해서 사용<br>
+    - @Repository :  Persistence Layer에서 DAO를 명시하기 위해서 사용
+
+  위 Layer들은 계층화 아키텍처(Layered Architecture)를 알아야 한다<br>
+  + 프리젠테이션 레이어(Presentation layer) 는 클라이언트와 최초로 만나는 곳으로 데이터 입출력이 발생하는 곳이다.
+  + 비즈니스 레이어(Business Layer)는 컨트롤러와 뷰를 연결해주며 
+  + 퍼시스턴스 레이어(Persistence Layer)는 데이터 베이스에 접근하는 계층이라 보면 된다.
+
+![LayeredArchitecture_img](https://user-images.githubusercontent.com/64416833/140644683-0e6b076b-0991-4f56-a292-90710a2d5e7e.jpg)
+
+
+  - 6-1) @Component<br>
+    + 해당 클래스가 객체로 만들어서 관리하는 대상임을 명시하는 어노테이션
+    + 빈 설정 XML 파일에 `<bean id="..." class="..."/>`나 자바 @Configuration 클래스에서 @Bean을 붙여 빈을 등록하던 것처럼 빈 클래스에 @Component 애노테이션을 붙여 빈을 등록
+    + @Component를 붙인 클래스를 스캔할 수 있도록 설정해 주어야 한다.
+    ㄴ `<context:component-scan base-package="..."/>`
+    + <context:component-scan> 태그의 base-package에 스캔할 패키지를 설정하고 패키지가 여러개인 경우 <context:component-scan>를 여러개 작성할 수 있다.
+    + `@Component`는 `<Bean class="..."/>`과 동일한 표현이다.<br>
+<br>
+
+**-- 추후 추가예정 --**
+  - 6-2) @Service
+  - 6-3) @Controller
+  - 6-4) @Repository<br>
+
+[참고자료] https://93nss.tistory.com/5  <br><br>
+
+---
+
+<br>
+
+### 7. Dispacher-Servlet
+**-- 추후 추가예정 --**
