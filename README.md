@@ -26,6 +26,18 @@ Spring Framework 프로젝트 생성 후 Github Repository에 Commit 하기<br><
 Spring Framework 프로젝트에 데이터베이스 (DBMS) 연동하기<br><br>
 [링크](https://github.com/ahn-sj/Comento-board/blob/main/note/W2.md)
 ## list
+1. RunWith()
+2. ApplicationContext
+3. spring<->mysql과 spring<->oracle접속
+4. sqlSessionFactory
+5. ns(namespaces)란
+6. mybatis DTD
+7. mapper 사용 이유
+8. jUnit(@Test)
+9. System.out.print보다 log가 권장되는 이유
+10. VO, DTO, DAO, Mapper
+11. 인터페이스의 장점과 쓰는 이유
+12. 커넥션 풀(Connection Pool)
 
 <br><br>
 
