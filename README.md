@@ -38,9 +38,36 @@ Spring Framework 프로젝트에 데이터베이스 (DBMS) 연동하기<br><br>
 10. VO, DTO, DAO, Mapper
 11. sqlSessionFactory
 12. ns(namespaces)란
-13. 커넥션 풀(Connection Pool)
+13. 커넥션 풀(Connection Pool) 
 
+<br>
+
+## 과제 중 발생 오류 
+
+### 1. MySQL Syntax ERROR
+![syntax_error_img](https://user-images.githubusercontent.com/64416833/141064468-92aab3bc-093e-45eb-b4fb-f6a3314cfa31.jpg)
+
+그동안 DBMS를 Oracle로만 사용하다보니 MySQL과 Oracle의 문법 차이로 발생한 구분 오류
+
+기존 쿼리<br>
+`select sysdate from dual`
 <br><br>
+변경 쿼리<br>
+`select sysdate()`
+
+
+<br>
+
+### 2. reflection 경고 메시지
+
+![reflector_error_img](https://user-images.githubusercontent.com/64416833/141064863-ee690be2-8705-4780-8d6b-90a4be9ddab0.jpg)
+
+Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis 버전 문제로 MyBatis 3.4.6 -> MyBatis 3.5.2로 버전으로 업그레이드 한 후 `maven update...` 후 해결<br><br>
+![solved_reflector_img](https://user-images.githubusercontent.com/64416833/141065316-4a70c7ce-263a-4b14-98be-3de68739aad7.jpg)
+
+[참고자료] https://sillutt.tistory.com/m/entry/Mybatis-WARNING-An-illegal-reflective-access-operation-has-occurred
+
+<br>
 
 ---
 
