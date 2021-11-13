@@ -2,6 +2,15 @@
 ## 나만의 포트폴리오 작성으로 웹개발 백엔드 직무 체험하기
 ### 기간 2021. 10. 31 ~ 2021. 11. 28
 
+## 개발환경
+```
+java version : 1.8
+IDE : STS 3.9.14 (Spring Tool Suite)
+Apache Tomcat 9.0.53
+Spring version : 5.0.7
+```
+
+
 ## 1차 과제<br>
 ### 주제 
 Spring Framework 프로젝트 생성 후 Github Repository에 Commit 하기<br><br>
