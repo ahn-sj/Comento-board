@@ -10,10 +10,15 @@ Apache Tomcat 9.0.53
 Spring version : 5.0.7
 ```
 
+<br>
+
+---
+
+<br>
 
 ## 1차 과제<br>
 ### 주제 
-Spring Framework 프로젝트 생성 후 Github Repository에 Commit 하기<br><br>
+### Spring Framework 프로젝트 생성 후 Github Repository에 Commit 하기<br><br>
 [링크](https://github.com/ahn-sj/Comento-board/blob/main/note/W1.md)
 
 ## list
@@ -32,7 +37,7 @@ Spring Framework 프로젝트 생성 후 Github Repository에 Commit 하기<br><
 
 ## 2차 과제<br>
 ### 주제 
-Spring Framework 프로젝트에 데이터베이스 (DBMS) 연동하기<br><br>
+### Spring Framework 프로젝트에 데이터베이스 (DBMS) 연동하기<br><br>
 [링크](https://github.com/ahn-sj/Comento-board/blob/main/note/W2.md)
 ## list
 1. ~~스프링 프로젝트 빌드 과정~~
@@ -43,11 +48,17 @@ Spring Framework 프로젝트에 데이터베이스 (DBMS) 연동하기<br><br>
 6. 인터페이스의 장점과 쓰는 이유
 7. jUnit(@Test)의 역할
 8. spring<->mysql과 spring<->oracle접속
-9. mapper 사용 이유
-10. VO, DTO, DAO, Mapper
-11. sqlSessionFactory
-12. ns(namespaces)란
-13. 커넥션 풀(Connection Pool) 
+9. ~~DAO, DTO, VO의 정의와 코드로 보는 DAO와 DTO의 차이~~
+10. ~~MyBatis - DAO(interface and class implements interface)와 Mapper(interface)~~
+11. ~~Controller, Service, DAO, Mapper의 데이터 흐름 - 1 (이론편)~~
+12. ~~Controller, Service, DAO, Mapper의 데이터 흐름 - 2 (코드편)~~
+13. sqlSessionFactory
+14. ns(namespaces)란
+15. 커넥션 풀(Connection Pool) 
+
+<br>
+
+---
 
 <br>
 
@@ -81,3 +92,54 @@ Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis
 ---
 
 <br>
+
+## 2차 피드백
+<br>
+
+`src/main/java/com/cmento/sample`에 생성한 `'...Tests'`테스트 클래스들을 `/src/test/java/...`의 위치로 이동 - **(완료)**
+
+![feedback1](https://user-images.githubusercontent.com/64416833/141832590-3b12b977-e912-4c44-bbfd-bec4dd8f6d4b.jpg)
+
+<br>
+
+![feedback2](https://user-images.githubusercontent.com/64416833/141832596-c1e5ef18-597c-4cbf-bafe-fa1e5423fa1a.jpg)
+
+<br>
+
+---
+
+<br>
+
+## 3차 과제
+### 주제 
+### Spring Framework 프로젝트에 게시판 구현하기 (CRUD)<br><br>
+[링크]()
+## list
+1. `Mapper.xml`속성 - `ParameterType`, `resultType`, `#{}`
+2. 의존성 주입 어노테이션 - `@Inject`, `@Autowired`, ...
+3. DAO <-> Mapper(`mapper.java`(interface)를 안쓰는 경우 처리 방법)
+4. GET방식과 POST방식
+5. JSTL(`c:forEach`, `c:if`, ...)
+6. Model(Para. -> `Method(Model model)`, `${list}`)작동 원리
+7. span/div차이
+8. `@RequestMapping` - 주소패턴, 속성
+9. Redirect(+사용방법)/Forward의 차이
+10. `<input>`태그 - 속성 : `readonly`
+11. `<button>`태그 - 속성 : `formaction`, `formmethod`
+12. `@RequestParam`
+
+
+
+<br>
+
+---
+
+<br>
+
+## 4차 과제
+### 주제 
+### Spring Framework 프로젝트의 DBMS를 다른 것으로 바꿔보기<br>
+
+<br>
+
+---

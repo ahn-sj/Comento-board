@@ -13,3 +13,8 @@ target/
 
 # STS (Spring Tool Suite)
 .springBeans
+
+### Java ###
+# Compiled class file and dir
+*.class
+bin/

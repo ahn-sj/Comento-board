@@ -132,11 +132,57 @@ public class TestDTO {
 <br>
 
 ### 11. Controller, Service, DAO, Mapper의 데이터 흐름 - 1 (이론편)
+
 <br>
 
-[참고자료] https://www.kurien.net/post/view/24
+- ### 4-Layered Architecture Diagram __ [이미지 출처](https://www.oreilly.com/library/view/software-architecture-patterns/9781491971437/ch01.html)
 
-service의 역할을 DAO가 DB에서 받아온 데이터를 전달받아 가공하는 것이다.
+![4layeredarchitecture_img](https://user-images.githubusercontent.com/64416833/141822796-46c9fffa-5343-4ca8-a929-c621a2d5f038.png)
+
+
+`4-Layered Architecture`는 `Presentation Layer`, `Business Layer`, `Persistence Layer`, `Database Layer`로 나누어져 있다.
+
+<br>
+
+Spring의 경우 각 계층에 매칭되는 건 다음과 같다.
+
+1. Presentation Layer : `View와 Controller`
+2. Business Layer : `Service`
+3. Persistence Layer : `DAO`
+4. Database Layer : `DB`
+
+- Business Layer : 모든 Business Logic이 구현되는 계층
+- Database Layer : 데이터베이스와 직접적인 연결을 통해 데이터를 가져오는 작업을 하는 계층
+
+[참고자료] https://velog.io/@blakekim93/Layered-Architecture
+
+<br>
+
+---
+
+<br>
+
+각 계층에 대한 예시는 아래와 같습니다.
+<br>
+
+1. **손님**`(Client)`이 **국민은행**`(URL Request)`으로 간다.<br>
+2. 국민은행에는 **상담/창구/보험/입출금** 등의 창구가 존재하고 나는 입금을 하기 때문에 **입출금 창구로 이동**`(Controller)`한다.
+3. (3번의 과정은 가정) 입출금을 할 때는 **양식**`(DTO(VO).. 계좌, 이름, 금액)`에 맞춰 기입을 하고 본인 차례에 은행원에게 **양식용지**`(DTO(VO))`를 제출해야 한다
+4. 본인 차례가 되어 **은행원**`(ServiceImpl)`에게 가면 **입금업무**`(ServiceInterface)`를 신청한다. <br>
+    ㄴ 입금업무가 interface인 이유는 나는 입금이 처리만 되면 되기때문에 입금이 이루어지는 일련의 과정들을 전혀 알 필요가 없기 때문이다.
+4. 은행원은 **입출금관리**`(DAOInterface)`메뉴로 가서 손님의 **계좌에 입금**`(DAOImpl)`을 한다.
+5. 손님은 **본인의 계좌**`(DB)`에 입금완료을 확인하게 된다.되고 **최신화된 계좌에 있는 입금 금액과 현재 보유 금액**`(Entity)`을 문자 메시지를 
+통해 전달 받는다.
+
+<br>
+
+위 예시를 통해 `컨트롤러`는 `서비스`에게 특정 업무를 요청하고 `서비스`는 업무에 필요한 자료를 `DAO`에게 요청하거나 업무를 통해 나온 `자료(DB)`를 `DAO`를 통해 저장하는 걸 알 수 있다.
+
+<br>
+
+위 예시 중간에서 업무가 `interface`인 이유를 설명했다싶이 `Controller(손님)`은 `Service(은행원)`을 통해 `DAO(입금처리)`를 하지만 `Service(은행원)`이 어떤 방식으로 처리하는지는 Controller(손님)의 입장에서는 알 필요가 없기 때문이다.
+
+[참고자료] https://www.kurien.net/post/view/24
 
 <br>
 
@@ -145,6 +191,8 @@ service의 역할을 DAO가 DB에서 받아온 데이터를 전달받아 가공�
 <br>
 
 ### 12. Controller, Service, DAO, Mapper의 데이터 흐름 - 2 (코드편)
+
+<br>
 
 ![process_img2](https://user-images.githubusercontent.com/64416833/141796640-52b4a3f3-327e-44c2-a52c-259f883c0ca0.jpg)
 
@@ -165,26 +213,27 @@ service의 역할을 DAO가 DB에서 받아온 데이터를 전달받아 가공�
 
 <br><br>
 
-### CASE - DAO(interface and implements)
+## > CASE - DAO(interface and implements)
 ### 호출
 URL Request -> Controller -> Service(interface) -> ServiceImpl -> DAO(interface) -> DAOImpl -> Mapper.xml -> DB <br>
 ### 반환
 DB -> Mapper.xml -> DAOImpl -> DAO(interface) -> ServiceImpl -> Service(interface) -> Controller -> Response(View)
 
-<br><br>
+<br>
 
-### CASE - Mapper.java(interface)
+## > CASE - Mapper.java(interface)
 ### 호출
 URL Request -> Controller -> Service(interface) -> ServiceImpl -> Mapper.java(interface) -> Mapper.xml -> DB <br>
 ### 반환
 DB -> Mapper.xml -> Mapper.java(interface) -> ServiceImpl -> Service(interface) -> Controller -> Response(View)
+
 <br>
 
-Mapper를 사용한 경우의 코드는 아래와 같습니다.
+Mapper.java(interface)를 사용할 경우의 예제 코드는 아래와 같습니다.
 ```java
 // BoardVO.java
 @Data
-public class BoardDto {
+public class BoardVO {
 	private int boardIdx;
 	private String title;
 	private String contents;
@@ -216,7 +265,7 @@ public class BoardController {
 ```java
 // BoardService.java (1.interface)
 public interface BoardService {
-	List<BoardDto> selectBoardList() throws Exception;
+	List<BoardVO> selectBoardList() throws Exception;
 }
 ```
 ```java
@@ -227,7 +276,7 @@ public class BoardServicelmpl implements BoardService {
 	private BoardMapper boardMapper;
 	
 	@Override
-	public List<BoardDto> selectBoardList() throws Exception {
+	public List<BoardVO> selectBoardList() throws Exception {
         // 이 부분에 의해 Mapper가 호출됨
 		return boardMapper.selectBoardList();
 	}
@@ -237,7 +286,7 @@ public class BoardServicelmpl implements BoardService {
 // BoardMapper.java
 @Mapper
 public interface BoardMapper {
-	List<BoardDto> selectBoardList() throws Exception;
+	List<BoardVO> selectBoardList() throws Exception;
 }
 ```
 ```xml
@@ -247,7 +296,7 @@ public interface BoardMapper {
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
    
 <mapper namespace="board.board.mapper.BoardMapper">
-  <select id="selectBoardList" resultType="board.board.dto.BoardDto">
+  <select id="selectBoardList" resultType="board.board.vo.BoardVO">
      <![CDATA[
      	SELECT
      		board_idx,
@@ -274,10 +323,10 @@ XML파일에서 중요한 것은 3가지가 존재한다.
 
     ```java
     // BoardMapper.java
-    List<BoardDto> selectBoardList() throws Exception;
+    List<BoardVO> selectBoardList() throws Exception;
     ```
 3. resultType : SQL문을 실행하고 결과값을 어떤 형식으로 반환할지에 대한 반환타입을 말한다.
-    `<select ... resultType="board.board.dto.BoardDto">`
+    `<select ... resultType="board.board.vo.BoardVO">`
 
 <br>
 
