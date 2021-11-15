@@ -1,4 +1,4 @@
-package com.cmento.sample;
+package com.cmento.mapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
