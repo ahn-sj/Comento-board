@@ -17,9 +17,8 @@ Spring version : 5.0.7
 <br>
 
 ## 1차 과제<br>
-### 주제 
+### 주제 - [이동](https://github.com/ahn-sj/Comento-board/blob/main/note/W1.md)
 ### Spring Framework 프로젝트 생성 후 Github Repository에 Commit 하기<br><br>
-[링크](https://github.com/ahn-sj/Comento-board/blob/main/note/W1.md)
 
 ## list
 1. ~~.gitignore 추가~~
@@ -36,9 +35,9 @@ Spring version : 5.0.7
 <br>
 
 ## 2차 과제<br>
-### 주제 
+### 주제 - [이동](https://github.com/ahn-sj/Comento-board/blob/main/note/W2.md)
 ### Spring Framework 프로젝트에 데이터베이스 (DBMS) 연동하기<br><br>
-[링크](https://github.com/ahn-sj/Comento-board/blob/main/note/W2.md)
+
 ## list
 1. ~~스프링 프로젝트 빌드 과정~~
 2. ApplicationContext
@@ -111,9 +110,9 @@ Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis
 <br>
 
 ## 3차 과제
-### 주제 
+### 주제 - [이동]()
 ### Spring Framework 프로젝트에 게시판 구현하기 (CRUD)<br><br>
-[링크]()
+
 ## list
 1. `Mapper.xml`속성 - `ParameterType`, `resultType`, `#{}`
 2. 의존성 주입 어노테이션 - `@Inject`, `@Autowired`, ...
@@ -128,6 +127,31 @@ Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis
 11. `<button>`태그 - 속성 : `formaction`, `formmethod`
 12. `@RequestParam`
 
+<br>
+
+---
+
+<br>
+
+## 수정 및 보완사항
+1. Mapper -> DAO && Oracle -> MySQL (예정)
+
+<br>
+
+2. viewcnt (예정)
+- Oracle에서 테이블을 생성할 때 값이 들어가지 않을 때 `null`이 입력되도록 설정되어 있음
+- `Mapper XML`을 작성할 때 `viewcnt`도 주었기 때문에 `localhost:8080/create`페이지에서 `viewcnt`를 넣어주지 않으면 아래 사진과 같이 `HTTP 상태 코드 500 : 부적합한 열 유형:1111`이 발생하게 돼서 임시방편으로 `create.jsp`에 `viewcnt`에 값을 넣을 수 있도록 입력 항목에 **조회수**를 추가시켜 해결하였는데 `viewcnt`를 주지않도록 `XML` 및 `create.jsp`를 수정할 예정임
+
+```xml
+<insert id="create">
+	insert into cmt_board (bno, title, content, writer, viewcnt)
+	values(seq_board.nextval, #{title}, #{content}, #{writer}, #{viewcnt})
+</insert>
+```
+
+<br>
+
+![error500](https://user-images.githubusercontent.com/64416833/142442581-995c5267-f7d9-4869-85fe-58e21b8612d0.jpg)
 
 
 <br>
@@ -137,8 +161,12 @@ Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis
 <br>
 
 ## 4차 과제
-### 주제 
+### 주제 - [이동]()
 ### Spring Framework 프로젝트의 DBMS를 다른 것으로 바꿔보기<br>
+
+1. Mapper -> DAO
+2. Oracle -> MySQL
+    - MySQL 기본 문법을 익히고 세션변수를 이용해 시퀀스 구현
 
 <br>
 
