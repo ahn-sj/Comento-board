@@ -8,10 +8,9 @@ import com.cmento.domain.BoardVO;
 
 @Mapper
 public interface BoardMapper {
-	void create(BoardVO board);
-	BoardVO read();
-	void update();
-	void delete();
 	List<BoardVO> listAll();
-
+	void create(BoardVO vo);
+	BoardVO read(Integer bno);
+	int delete(Integer bno);
+	int update(BoardVO vo);
 }

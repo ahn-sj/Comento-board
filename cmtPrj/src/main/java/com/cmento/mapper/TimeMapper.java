@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface TimeMapper {
-	@Select("select sysdate()")
+	@Select("select sysdate from dual")
 	String getTime();
 	
 	String getTime2();

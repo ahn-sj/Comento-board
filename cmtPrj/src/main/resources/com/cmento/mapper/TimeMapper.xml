@@ -5,7 +5,7 @@
   
 <mapper namespace="com.cmento.mapper.TimeMapper">
 	<select id="getTime2" resultType="string">
-		select now()
+		select systimestamp from dual
 	</select>
 </mapper>  
 

@@ -21,7 +21,7 @@ public class TimeMapperTests {
 	@Test
 	public void testTime() {
 		log.info("----------------------------");
-		log.info("sysdate() : " + timeMapper.getTime());
+		log.info("sysdate : " + timeMapper.getTime());
 		log.info("----------------------------");
 	}
 	
@@ -29,7 +29,7 @@ public class TimeMapperTests {
 		@Test
 		public void testTime1() {
 			log.info("----------------------------");
-			log.info("now() : " + timeMapper.getTime2());
+			log.info("systimestamp : " + timeMapper.getTime2());
 			log.info("----------------------------");
 		}
 }

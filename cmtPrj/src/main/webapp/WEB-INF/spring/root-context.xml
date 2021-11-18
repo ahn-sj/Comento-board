@@ -13,19 +13,33 @@
 	
 	<!-- Root Context: defines shared resources visible to all other web components -->
 		
+	<!-- Oracle dataSource -->
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">
+		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"/>
+		<property name="jdbcUrl" value="jdbc:log4jdbc:oracle:thin:@localhost:1521:XE"/>
+		<property name="username" value="c##cmt_user"/>
+		<property name="password" value="cmt_user"/>
+	</bean>	
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig"/>
+	</bean>
+		
 	<!-- MySQL dataSource -->
+	<!-- 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://localhost:3306/cmtdb?useSSL=false"/>
         <property name="username" value="ahnsj"/>
         <property name="password" value="1207"/>
     </bean>   
-    
+     -->
+     
     <!-- mybatis sqlSessionFactoryBean Configuration -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-	</bean>
+	</bean>	
 	
-	<context:component-scan base-package="com.cmento.sample"/>
 	<mybatis-spring:scan base-package="com.cmento.mapper"/>
+	<context:component-scan base-package="com.cmento.service"/>
+	
 </beans>
