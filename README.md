@@ -134,25 +134,22 @@ Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis
 <br>
 
 ## 수정 및 보완사항
-1. Mapper -> DAO && Oracle -> MySQL (예정)
+~~viewcnt Null 처리~~  **[해결완료]**
+
+**오라클은 모든 자료형의 DEFAULT값이 0이다.**
 
 <br>
 
-2. viewcnt (예정)
-- Oracle에서 테이블을 생성할 때 값이 들어가지 않을 때 `null`이 입력되도록 설정되어 있음
-- `Mapper XML`을 작성할 때 `viewcnt`도 주었기 때문에 `localhost:8080/create`페이지에서 `viewcnt`를 넣어주지 않으면 아래 사진과 같이 `HTTP 상태 코드 500 : 부적합한 열 유형:1111`이 발생하게 돼서 임시방편으로 `create.jsp`에 `viewcnt`에 값을 넣을 수 있도록 입력 항목에 **조회수**를 추가시켜 해결하였는데 `viewcnt`를 주지않도록 `XML` 및 `create.jsp`를 수정할 예정임
-
-```xml
-<insert id="create">
-	insert into cmt_board (bno, title, content, writer, viewcnt)
-	values(seq_board.nextval, #{title}, #{content}, #{writer}, #{viewcnt})
-</insert>
-```
-
-<br>
-
+- `cmt_board`테이블을 처음 생성할 때(used Oracle) `viewcnt`에 `default`값을 주지 않아서 값이 주어지지 않을 경우 값이 `null`이 되었다. 그래서 insert문을 실행할 때 `HTTP 상태 코드 500 : 부적합한 열 유형:1111`의 오류가 발생했다. 
 ![error500](https://user-images.githubusercontent.com/64416833/142442581-995c5267-f7d9-4869-85fe-58e21b8612d0.jpg)
 
+- 그래서 `Mapper XML`를 작성할 때 `insert`시에 `viewcnt`값도 입력받도록 쿼리를 짰고, `create.jsp`에 조회수 입력 항목을 만들어서 `viewcnt`의 값을 입력받도록 했다.
+
+<br>
+
+우선 테이블 생성할 때 `default`를 사용하는 걸 생각하지 못했을 뿐더러 `viewcnt`값이 `null`이라 실행되지 않는 걸 알고도 `ALTER TABLE ...`을 할 생각도 못했다.<br>
+
+이 문제를 계기로 주 DBMS를 골라서 기본서부터 다시 봐야겠다는 생각이 들었다
 
 <br>
 
@@ -165,8 +162,56 @@ Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis
 ### Spring Framework 프로젝트의 DBMS를 다른 것으로 바꿔보기<br>
 
 1. Mapper -> DAO
-2. Oracle -> MySQL
-    - MySQL 기본 문법을 익히고 세션변수를 이용해 시퀀스 구현
+2. Oracle -> MySQL 
+
+<br>
+
+- MySQL SEQUENCE (AUTO_INCREMENT)
+	```sql
+	CREATE TABLE MySQL.main_category_seq (
+		`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+	);
+	```
+
+- MySQL hikariCP, log4jdbc 
+	1) dependency, log4jdbc.log4j2.properties(오라클과 동일)
+	```xml
+	<dependency>
+		<groupId>com.zaxxer</groupId>
+		<artifactId>HikariCP</artifactId>
+		<version>3.4.5</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.bgee.log4jdbc-log4j2</groupId>
+		<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
+		<version>1.16</version>
+	</dependency>
+	```	
+	```
+	log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator
+	```
+	
+	<br>
+
+	2) root-context.xml
+	```xml
+	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">		
+ 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
+		<property name="jdbcUrl" value="jdbc:log4jdbc:mysql://localhost:3306/데이터베이스명?serverTimezone=Asia/Seoul"></property> 
+		<property name="username" value="사용자명"></property>
+		<property name="password" value="비밀번호"></property>
+	</bean>	
+	
+	<bean id="datasource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="hikariConfig"></constructor-arg>
+	</bean>
+	```
+
+<br>
+
+- MySQL selectKey 사용 시 LAST_INSERT_ID() (추후학습예정)
+- MySQL ROWNUM (추후학습예정)
 
 <br>
 
