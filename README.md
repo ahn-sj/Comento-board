@@ -140,7 +140,7 @@ Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis
 
 <br>
 
-- `cmt_board`테이블을 처음 생성할 때(used Oracle) `viewcnt`에 `default`값을 주지 않아서 값이 주어지지 않을 경우 값이 `null`이 되었다. 그래서 insert문을 실행할 때 `HTTP 상태 코드 500 : 부적합한 열 유형:1111`의 오류가 발생했고 임시방편으로 `Mapper XML`을 작성할 때 `<insert>`쿼리에 `viewcnt`값도 입력받도록 쿼리를 짰고, `create.jsp`에 조회수 입력 항목을 만들어서 `viewcnt`의 값을 입력받도록 했었다.
+- `cmt_board`테이블을 처음 생성할 때(used Oracle) `viewcnt`에 `default`값을 주지 않아서 값이 주어지지 않을 경우 값이 `null`이 되었다. 그래서 insert문을 실행할 때 `HTTP 상태 코드 500 : 부적합한 열 유형:1111`의 오류가 발생했고 임시방편으로 `Mapper XML`을 작성할 때 `<insert>`쿼리에 `viewcnt`값도 입력받도록 쿼리를 짰고, `regist.jsp`에 조회수 입력 항목을 만들어서 `viewcnt`의 값을 입력받도록 했었다.
 ![error500](https://user-images.githubusercontent.com/64416833/142442581-995c5267-f7d9-4869-85fe-58e21b8612d0.jpg)
 
 <br>
@@ -168,6 +168,7 @@ cmtPrj2 -> MySQL, DAO
 
 <br>
 
+### 중점적으로 다룰 내용
 ### 1. ~~Mapper -> DAO~~ **완료**
 ### 2. ~~Oracle -> MySQL~~ **완료**
 
@@ -183,7 +184,7 @@ cmtPrj2 -> MySQL, DAO
 
 <br>
 
-### MySQL, Oracle Table생성 및 INSERT QUERY
+### MySQL/Oracle CREATE TABLE 및 INSERT QUERY
 - **MySQL**
 	```sql
 	CREATE TABLE CMT_BOARD (
@@ -251,12 +252,12 @@ org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis
 ### Cause: java.lang.IllegalArgumentException: Mapped Statements collection does not contain value for com.cmento.mapper.BoardMapper.listAll
 ```
 
-`MyBatis PersistenceException Error`<br>
+### **MyBatis PersistenceException Error** <br>
 -  `Mapper`에서 `DAO`로 변경하고 **DAO를 구현한 클래스**를 `junit`으로 테스트하다 발생한 에러
 
 <br>
 
-`listAll`을 찾을 수 없다고 되어있어서 기존에 `Mapper.xml`을 등록하는 `root-context`에 `mapperLocations`를 찾아봤고 아래 코드로 변경해서 해결했다.
+`listAll`을 찾을 수 없다고 되어있어서 `Mapper.xml`을 등록하는 `root-context.xml`에서 `mapperLocations`을 확인하고 구글링해서 아래와 같은 코드로 변경해서 해결
 
 ```xml
 <!-- 기존 property -->
@@ -264,17 +265,21 @@ org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis
 
 <!-- **************************** -->
 
-<!-- 변경 --> 
+<!-- 변경 property --> 
 <property name="mapperLocations" value="classpath*:com/**/*Mapper.xml"/>
 ```
 
-프로젝트의 디렉터리 구조는 다음 이미지와 같다
+<br>
+
+해당 프로젝트의 디렉터리 구조는 아래 이미지와 같다
 
 ![dir_arch](https://user-images.githubusercontent.com/64416833/142638590-d4668ed6-7ec8-4403-8264-35825c9ea807.jpg)
 
 <br>
 
-위 `<property>`코드에서 classpath에 \*가 붙고 안붙고의 차이는 1) `classpath`는 현재 프로젝트의 resource만 선택 한다는 것이고 2) `classpath*`는 현재 프로젝트에 관련(참조)된 모든 jar를 다 검색하여 리소스를 선택 한다는 차이가 있다.
+위 `<property>`코드에서 `classpath`에 \*가 붙고 안붙고의 차이는 1) `classpath`는 현재 프로젝트의 `resource`만 선택 한다는 것이고 2) `classpath*`는 현재 프로젝트에 관련(참조)된 모든 jar를 다 검색하여 `resource`를 선택 한다는 차이가 있다.
+
+[참고자료] http://mybatis.org/spring/ko/factorybean.html
 
 [참고자료] https://munhwasudo.tistory.com/entry/spring-classpath-vs-classpath-%EC%B0%A8%EC%9D%B4%EC%A0%90
 
