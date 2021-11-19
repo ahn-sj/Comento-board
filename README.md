@@ -159,62 +159,125 @@ Mapper Test 중 위와 같은 경고가 발생했는데 발생 이유는 MyBatis
 ### 주제
 ### Spring Framework 프로젝트의 DBMS를 다른 것으로 바꿔보기<br>
 
-### 1. Mapper -> DAO
-### 2. Oracle -> MySQL 
+<br>
+
+```
+cmtPrj --> Oracle, Mapper
+cmtPrj2 -> MySQL, DAO
+```
+
+<br>
+
+### 1. ~~Mapper -> DAO~~ **완료**
+### 2. ~~Oracle -> MySQL~~ **완료**
 
 <br>
 
 ## list - [이동](https://github.com/ahn-sj/Comento-board/blob/main/note/W4.md)
+1. hikariCP (DBCP)
+2. MyBatis - DAO(mybatis-config.xml, *Mapper.xml) 흐름도
+3. sqlSessionFactory - property - value - classpath 경로
+4. sqlSessionFactory - property - configLocation, mapperLocation
+5. sqlSessionTemplate과 메서드
+6. SEQUENCE(MySQL - AUTO_INCREMENT, Oracle - seq.nextval)
 
 <br>
 
-- MySQL SEQUENCE (AUTO_INCREMENT)
+### MySQL, Oracle Table생성 및 INSERT QUERY
+- **MySQL**
 	```sql
-	CREATE TABLE MySQL.main_category_seq (
-		`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY
+	CREATE TABLE CMT_BOARD (
+		BNO INT AUTO_INCREMENT PRIMARY KEY,
+		TITLE VARCHAR(200) NOT NULL,
+		CONTENT VARCHAR(2000) NOT NULL,
+		WRITER VARCHAR(50) NOT NULL,
+		REGDATE DATETIME DEFAULT NOW(),
+		VIEWCNT INT DEFAULT 0
 	);
-	```
 
-- MySQL hikariCP, log4jdbc 
-	1) dependency, log4jdbc.log4j2.properties(오라클과 동일)
-	```xml
-	<dependency>
-		<groupId>com.zaxxer</groupId>
-		<artifactId>HikariCP</artifactId>
-		<version>3.4.5</version>
-	</dependency>
+	-- 데이터 삽입
+	INSERT INTO CMT_BOARD(TITLE, CONTENT, WRITER)
+	VALUES ("TITLE1", "CONTENT1", "WRITER1");
 
-	<dependency>
-		<groupId>org.bgee.log4jdbc-log4j2</groupId>
-		<artifactId>log4jdbc-log4j2-jdbc4.1</artifactId>
-		<version>1.16</version>
-	</dependency>
-	```	
-	```
-	log4jdbc.spylogdelegator.name=net.sf.log4jdbc.log.slf4j.Slf4jSpyLogDelegator
-	```
-	
-	<br>
-
-	2) root-context.xml
-	```xml
-	<bean id="hikariConfig" class="com.zaxxer.hikari.HikariConfig">		
- 		<property name="driverClassName" value="net.sf.log4jdbc.sql.jdbcapi.DriverSpy"></property>
-		<property name="jdbcUrl" value="jdbc:log4jdbc:mysql://localhost:3306/데이터베이스명?serverTimezone=Asia/Seoul"></property> 
-		<property name="username" value="사용자명"></property>
-		<property name="password" value="비밀번호"></property>
-	</bean>	
-	
-	<bean id="datasource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-		<constructor-arg ref="hikariConfig"></constructor-arg>
-	</bean>
+	-- SELECT
+	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+	|  BNO	|	TITLE	|  CONTENT	|  WRITER	|  REGDATE	|  VIEWCNT	|
+	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+	|	1	|	TITLE1	|  CONTENT1	|  WRITER1	| 2021. ... |	  0		|
+	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 	```
 
 <br>
 
-- MySQL selectKey 사용 시 LAST_INSERT_ID() (추후학습예정)
-- MySQL ROWNUM (추후학습예정)
+- **Oracle**
+	```sql
+	CREATE SEQUENCE seq_board START WITH 1 INCREMENT BY 1 NOCACHE;
+
+	CREATE TABLE CMT_BOARD (
+		BNO NUMBER(10, 0),
+		TITLE VARCHAR2(200) NOT NULL,
+		CONTENT VARCHAR2(2000) NOT NULL,
+		WRITER VARCHAR2(50) NOT NULL,
+		REGDATE DATE DEFAULT SYSDATE,
+		VIEWCNT NUMBER DEFAULT 0
+	);
+
+	ALTER TABLE CMT_BOARD ADD CONSTRAINT PK_BOARD PRIMARY KEY(BNO);
+
+	-- 데이터 삽입
+	INSERT INTO CMT_BOARD (BNO, TITLE, CONTENT, WRITER)
+	VALUES (SEQ_BOARD.NEXTVAL, 'TITLE2', 'CONTENT2', 'WRITER2');
+
+	--SELECT
+	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+	|  BNO	|	TITLE	|  CONTENT	|  WRITER	|  REGDATE	|  VIEWCNT	|
+	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+	|	1	|	TITLE2	|  CONTENT2	|  WRITER2	| 2021. ... |	  0		|
+	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+	```	
 
 <br>
 
 ---
+
+<br>
+
+## 과제 중 발생 오류 
+![nestedexception_img](https://user-images.githubusercontent.com/64416833/142636465-04b018db-1002-4343-8869-44704186b2f8.jpg)
+
+```
+org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis.exceptions.PersistenceException: 
+### Error querying database.  Cause: java.lang.IllegalArgumentException: Mapped Statements collection does not contain value for com.cmento.mapper.BoardMapper.listAll
+### Cause: java.lang.IllegalArgumentException: Mapped Statements collection does not contain value for com.cmento.mapper.BoardMapper.listAll
+```
+
+`MyBatis PersistenceException Error`<br>
+-  `Mapper`에서 `DAO`로 변경하고 **DAO를 구현한 클래스**를 `junit`으로 테스트하다 발생한 에러
+
+<br>
+
+`listAll`을 찾을 수 없다고 되어있어서 기존에 `Mapper.xml`을 등록하는 `root-context`에 `mapperLocations`를 찾아봤고 아래 코드로 변경해서 해결했다.
+
+```xml
+<!-- 기존 property -->
+<property name="mapperLocations" value="classpath:com/**/*Mapper.xml"/>
+
+<!-- **************************** -->
+
+<!-- 변경 --> 
+<property name="mapperLocations" value="classpath*:com/**/*Mapper.xml"/>
+```
+
+프로젝트의 디렉터리 구조는 다음 이미지와 같다
+
+![dir_arch](https://user-images.githubusercontent.com/64416833/142638590-d4668ed6-7ec8-4403-8264-35825c9ea807.jpg)
+
+<br>
+
+위 `<property>`코드에서 classpath에 \*가 붙고 안붙고의 차이는 1) `classpath`는 현재 프로젝트의 resource만 선택 한다는 것이고 2) `classpath*`는 현재 프로젝트에 관련(참조)된 모든 jar를 다 검색하여 리소스를 선택 한다는 차이가 있다.
+
+[참고자료] https://munhwasudo.tistory.com/entry/spring-classpath-vs-classpath-%EC%B0%A8%EC%9D%B4%EC%A0%90
+
+
+
+<br>
