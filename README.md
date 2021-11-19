@@ -230,9 +230,9 @@ cmtPrj2 -> MySQL, DAO
 
 	--SELECT
 	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-	|  BNO	|	TITLE	|  CONTENT	|  WRITER	|  REGDATE	|  VIEWCNT	|
+	| BNO | TITLE | CONTENT | WRITER | REGDATE | VIEWCNT |
 	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-	|	1	|	TITLE2	|  CONTENT2	|  WRITER2	| 2021. ... |	  0		|
+	| 1 | TITLE2 | CONTENT2 | WRITER2 | 2021. ... | 0 |
 	ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
 	```	
 
