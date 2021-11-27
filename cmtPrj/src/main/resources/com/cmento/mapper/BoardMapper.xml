@@ -12,8 +12,8 @@
 	</select>
 	
 	<insert id="create">
-		insert into cmt_board (bno, title, content, writer, viewcnt)
-		values(seq_board.nextval, #{title}, #{content}, #{writer}, #{viewcnt})
+		insert into cmt_board (title, content, writer)
+		values(#{title}, #{content}, #{writer})
 	</insert>
 	
 	<select id="read" resultType="com.cmento.domain.BoardVO">
@@ -32,7 +32,7 @@
 		set title = #{title},
 			content = #{content},
 			writer = #{writer},
-			regdate = sysdate
+			regdate = now()
 		where bno = #{bno}
 	</update>
 </mapper>  
