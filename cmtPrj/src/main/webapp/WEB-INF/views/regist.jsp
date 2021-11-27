@@ -18,10 +18,10 @@
 			<label>작성자</label>
 			<input type="text" name="writer" size="15">
 		</p>
-		<p>
+		<!-- <p>
 			<label>조회수</label>
 			<input type="text" name="viewcnt" size="15">
-		</p>
+		</p> -->
 		<p>
 			<label>내용</label>
 			<textarea rows="15" cols="65" name = "content"></textarea>
