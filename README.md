@@ -244,6 +244,10 @@ cmtPrj2 -> MySQL, DAO
 <br>
 
 ## 과제 중 발생 오류 
+
+### 1. **MyBatis PersistenceException Error** <br>
+-  `Mapper`에서 `DAO`로 변경하고 **DAO를 구현한 클래스**를 `junit`으로 테스트하다 발생한 에러
+
 ![nestedexception_img](https://user-images.githubusercontent.com/64416833/142636465-04b018db-1002-4343-8869-44704186b2f8.jpg)
 
 ```
@@ -251,9 +255,6 @@ org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis
 ### Error querying database.  Cause: java.lang.IllegalArgumentException: Mapped Statements collection does not contain value for com.cmento.mapper.BoardMapper.listAll
 ### Cause: java.lang.IllegalArgumentException: Mapped Statements collection does not contain value for com.cmento.mapper.BoardMapper.listAll
 ```
-
-### **MyBatis PersistenceException Error** <br>
--  `Mapper`에서 `DAO`로 변경하고 **DAO를 구현한 클래스**를 `junit`으로 테스트하다 발생한 에러
 
 <br>
 
@@ -283,6 +284,58 @@ org.mybatis.spring.MyBatisSystemException: nested exception is org.apache.ibatis
 
 [참고자료] https://munhwasudo.tistory.com/entry/spring-classpath-vs-classpath-%EC%B0%A8%EC%9D%B4%EC%A0%90
 
+<br><br>
 
+### 2. **한글 깨짐 현상 (Oracle)** <br>
+![utferror](https://user-images.githubusercontent.com/64416833/143670901-96cfc597-1f04-477d-958b-1f87bb734aaa.jpg)
+
+별다른 처리를 해주지 않고 입력(제목, 내용, 작성자)을 받게 되면 한글이 깨지게 된다.
 
 <br>
+
+아래 인코딩 필터 코드를 `web.xml`에 추가
+```xml
+<filter>
+	<filter-name>encoding</filter-name>
+	<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	<init-param>
+		<param-name>encoding</param-name>
+		<param-value>UTF-8</param-value>
+	</init-param>
+</filter>
+	
+<filter-mapping>
+	<filter-name>encoding</filter-name>
+	<servlet-name>appServlet</servlet-name>
+</filter-mapping>
+```
+
+<br>
+
+서버를 재시작해주면 정상적으로 한글을 인식하게 된다.
+
+![utferror2](https://user-images.githubusercontent.com/64416833/143671039-2de7e3c0-94ef-4589-81ba-47852185e409.jpg)
+
+<br>
+
+---
+
+<br>
+
+## 4차 피드백
+
+<br>
+
+1. DBMS별 branch 분리
+- branch의 기본 사용법과 원리를 익히고 DBMS별 main branch와 분리시켜 push
+
+**main branch(Oracle)**
+
+![branch2](https://user-images.githubusercontent.com/64416833/143671099-8114b366-b17e-47f9-8d38-c1ec49c67db8.jpg)
+
+**main-mysql branch(MySQL)**
+
+![branch1](https://user-images.githubusercontent.com/64416833/143671100-7856d8ac-d14e-431b-bcaa-463de7ee0822.jpg)
+
+[참고자료] https://goddaehee.tistory.com/274?category=381481 <br>
+[참고자료] https://info-lab.tistory.com/60
