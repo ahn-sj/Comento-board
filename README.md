@@ -175,7 +175,7 @@ cmtPrj2 -> MySQL, DAO
 <br>
 
 ## list - [이동](https://github.com/ahn-sj/Comento-board/blob/main/note/W4.md)
-1. hikariCP (DBCP)
+1. ~~커넥션 풀(DBCP, Database Connection Pool)~~
 2. MyBatis - DAO(mybatis-config.xml, *Mapper.xml) 흐름도
 3. sqlSessionFactory - property - value - classpath 경로
 4. sqlSessionFactory - property - configLocation, mapperLocation
